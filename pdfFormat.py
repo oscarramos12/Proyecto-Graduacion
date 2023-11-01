@@ -6,18 +6,6 @@ import scraper
 import reports
 import time
 
-'''
-RETOS:
-    -la font liberation seriff no la puede leer fitz que es la libreria que me deja acceder a los datos de la font
-    por lo que tuve que usar Py2PDF lo cual hace que se tarde mas
-
-    -los archivos de google drive no se pueden descargar solo asi por lo que se tiene que editar el link para que sea directo
-
-    -aparte de que sea directo se necesitan los headers para obtener el nombre del archivo
-
-    -se tuvieron que hacer similaridad de jaccard y distancia de levenshtein para evaluar que no se descargue el mismo libro 2 veces
-'''
-
 class Color:
     RESET = "\033[0m"
     RED = "\033[91m"
@@ -182,10 +170,10 @@ def convert_to_txt(folder_path):
                 font_sizes_count, font_types_count = reports.extract_font_info(pdf_file)
 
                 print("-------------------------------------------------------------------------------")
-                print("FILE: " + file)
-                print("Estadisticas tamaños de font:")
+                print("Archivo: " + file)
+                print("Estadisticas tamaños de tipo de letra:")
                 print(font_sizes_count)            
-                print("Estadisticas tipos de font:")
+                print("Estadisticas tipos de letra:")
                 print(font_types_count)
 
                 top_font_size = next(iter(font_sizes_count))
@@ -220,10 +208,8 @@ def main():
             #scraper.scrape_books(link)
             #print(f'Se completaron las descargas de {link}')
             #reports.write_report('general_reports','general_reports','Links Recorridos',[link])
-    #folder_path = 'C:\\Users\\Oscar\\Desktop\\LIBROS\\downloaded_pdfs\\'
-    #convert_to_txt(folder_path)
-    pass
-    
+    folder_path = 'C:\\Users\\Oscar\\Desktop\\LIBROS\\downloaded_pdfs\\'
+    convert_to_txt(folder_path)    
     
 
 if __name__ == "__main__":

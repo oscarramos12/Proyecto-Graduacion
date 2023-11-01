@@ -70,7 +70,7 @@ def check_dups(name_check, token_list,name_list, nlp,pdf_url):
 
         levenshtein_distance = fuzz.ratio(name_check, name_list[get_simple_name]) / 100.0
 
-        threshold = 0.66
+        threshold = 0.55
 
         overall_similarity = (jaccard_similarity + levenshtein_distance) / 2.0
 
@@ -117,7 +117,7 @@ def scrape_books(url):
             if pdf_url.endswith('.pdf'):
 
                 time.sleep(3)
-
+                #verifica que los nombres no sean similare
                 if not check_dups(pdf_name, file_list,simple_name_list,nlp,pdf_url):
                     pdf_response = requests.get(pdf_url)
                     if pdf_response.status_code == 200:

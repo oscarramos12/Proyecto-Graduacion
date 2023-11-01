@@ -31,7 +31,6 @@ def convert_pdfs_to_utf8_txt(input_folder, output_folder):
 
             file.close()
 
-# Example usage
 input_folder_path = 'C:\\Users\\Oscar\\Desktop\\LIBROS\\downloaded_pdfs'
 output_folder_path = 'C:\\Users\\Oscar\\Desktop\\LIBROS\\pdf_to_txt'
 convert_pdfs_to_utf8_txt(input_folder_path, output_folder_path)

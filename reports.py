@@ -128,6 +128,8 @@ def write_report(report_folder_name,report_file_name,report_sheet_name,text_to_a
             row_values = []
             variable_max_col = 0
 
+            #si no se estan agregando bien aqui esta el problema
+
             if(report_sheet_name == 'Archivos Duplicados'):
                 variable_max_col = 4
             elif(report_sheet_name == 'Errores Descargas'):
@@ -141,14 +143,17 @@ def write_report(report_folder_name,report_file_name,report_sheet_name,text_to_a
             elif(report_sheet_name == 'Archivos Descargados'):
                 variable_max_col = 2
             elif(report_sheet_name == 'Todos los Caracteres'):
-                variable_max_col = 0
+                variable_max_col = 1
             elif(report_sheet_name == 'Links Recorridos'):
-                variable_max_col = 0
+                variable_max_col = 1
             elif(report_sheet_name == 'Archivos Vacios'):
-                variable_max_col = 0
+                variable_max_col = 1
+            elif(report_sheet_name == 'N-Gramas'):
+                variable_max_col = 2
+            elif(report_sheet_name == 'Modelacion Temas'):
+                variable_max_col = 2
 
             
-
             for row in report_sheet.iter_rows(min_col=0,max_col=variable_max_col):
                 column_values = []
                 for cell in row:
@@ -164,9 +169,6 @@ def write_report(report_folder_name,report_file_name,report_sheet_name,text_to_a
             elif(report_sheet_name == 'Contenidos Similares'):
                  if(text_to_add not in row_values):
                     report_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2]])
-            elif(report_sheet_name == 'Caracteristicas Docs'):
-                 if(text_to_add[0:3] not in row_values):
-                    report_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5],text_to_add[6],text_to_add[7],text_to_add[8]])
             elif(report_sheet_name == 'Idiomas Diferentes'):
                  if(text_to_add not in row_values):
                     report_sheet.append([text_to_add[0],text_to_add[1]])
@@ -182,13 +184,25 @@ def write_report(report_folder_name,report_file_name,report_sheet_name,text_to_a
             elif(report_sheet_name == 'Archivos Vacios'):
                  if(text_to_add not in row_values):
                     report_sheet.append([text_to_add[0]])
+            elif(report_sheet_name == 'Caracteristicas Docs'):
+                 if(text_to_add[0:3] not in row_values):
+                    if(len(text_to_add) == 9):
+                        report_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5],text_to_add[6],text_to_add[7],text_to_add[8]])
+                    else:
+                        report_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5],text_to_add[6]])
+            elif(report_sheet_name == 'N-Gramas'):
+                 if(text_to_add not in row_values):
+                    report_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5]])
+            elif(report_sheet_name == 'Modelacion Temas'):
+                 if(text_to_add not in row_values):
+                    report_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2]])
 
             workbook.save(file_path)
     elif(report_file_name == 'general_reports'):
         workbook = openpyxl.Workbook()
         default_sheet = workbook.active
         workbook.remove(default_sheet)
-        sheet_names = ['Archivos Duplicados','Errores Descargas','Contenidos Similares','Idiomas Diferentes', 'Archivos Descargados', 'Todos los Caracteres']
+        sheet_names = ['Links Recorridos','Archivos Duplicados','Errores Descargas','Contenidos Similares','Idiomas Diferentes','Modelacion Temas', 'Archivos Descargados', 'Todos los Caracteres','Archivos Vacios']
         for sheet_name in sheet_names:
             workbook.create_sheet(title=sheet_name)
         
@@ -231,25 +245,98 @@ def write_report(report_folder_name,report_file_name,report_sheet_name,text_to_a
         contents_sheet.append(['Nombre Archivo'])
         if(report_sheet_name == 'Archivos Vacios'):
             contents_sheet.append([text_to_add[0]])
-        
-        
 
+        contents_sheet = workbook['Modelacion Temas']
+        contents_sheet.append(['Nombre Archivo','Palabras','Valor Relevancia'])
+        if(report_sheet_name == 'Modelacion Temas'):
+            contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2]])
+    
         workbook.save(file_path)
-    elif(report_file_name == 'dirty_files_reports' or report_file_name == 'clean_file_reports'):
+
+    elif(report_file_name == 'dirty_files_reports'):
         workbook = openpyxl.Workbook()
         default_sheet = workbook.active
         workbook.remove(default_sheet)
         workbook.create_sheet(title='Caracteristicas Docs')
-        contents_sheet = workbook['Caracteristicas Docs']
+        workbook.create_sheet(title='N-Gramas')
+        workbook.create_sheet(title='Modelacion Temas')
 
+        contents_sheet = workbook['Caracteristicas Docs']
         contents_sheet.append(['Titulo Documento', 'Fonts Documento', 'Tamaño Fonts','Caracteres Unicos','Letras Unicas','Idioma','Top Peek', 'Mid Peek', 'Bottom Peek'])
-        contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5],text_to_add[6],text_to_add[7],text_to_add[8]])
+        if(report_sheet_name == 'Caracteristicas Docs'):
+            contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5],text_to_add[6],text_to_add[7],text_to_add[8]])
+
+        contents_sheet = workbook['N-Gramas']
+        contents_sheet.append(['Nombre Archivo','Tipo N-Grama','Top','Veces','Bottom','Veces'])
+        if(report_sheet_name == 'N-Gramas'):          
+            contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5]])
+
+        contents_sheet = workbook['Modelacion Temas']
+        contents_sheet.append(['Nombre Archivo','Palabras','Valor Relevancia'])
+        if(report_sheet_name == 'Modelacion Temas'):    
+            contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2]])
+
+
         workbook.save(file_path)
         
         print(f"{Color.MAGENTA} Se creo el archivo de reporte {report_file_name} {Color.RESET}")
-        
 
-def generate_file_reports(txt_folder_path,pdf_folder_path):
+    elif(report_file_name == 'clean_files_reports'):
+        workbook = openpyxl.Workbook()
+        default_sheet = workbook.active
+        workbook.remove(default_sheet)
+        workbook.create_sheet(title='Caracteristicas Docs')
+        workbook.create_sheet(title='N-Gramas')
+        workbook.create_sheet(title='Modelacion Temas')
+
+        contents_sheet = workbook['Caracteristicas Docs']
+        contents_sheet.append(['Titulo Documento','Caracteres Unicos','Letras Unicas','Idioma','Top Peek', 'Mid Peek', 'Bottom Peek'])
+        if(report_sheet_name == 'Caracteristicas Docs'):
+            contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5],text_to_add[6]])
+
+        contents_sheet = workbook['N-Gramas']
+        contents_sheet.append(['Nombre Archivo','Tipo N-Grama','Top','Veces','Bottom','Veces'])
+        if(report_sheet_name == 'N-Gramas'):          
+            contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2],text_to_add[3],text_to_add[4],text_to_add[5]])
+
+        contents_sheet = workbook['Modelacion Temas']
+        contents_sheet.append(['Nombre Archivo','Palabras','Valor Relevancia'])
+        if(report_sheet_name == 'Modelacion Temas'):    
+            contents_sheet.append([text_to_add[0],text_to_add[1],text_to_add[2]])
+
+
+        workbook.save(file_path)
+        
+        print(f"{Color.MAGENTA} Se creo el archivo de reporte {report_file_name} {Color.RESET}")
+
+        
+def generate_clean_file_reports(folder_path):
+    if not os.path.exists(folder_path):
+        print(f"El folder no existe: [{folder_path}]")
+    else:
+
+        for file_name in os.listdir(folder_path):
+            txt_file_path = os.path.join(folder_path, file_name)
+            clean_file_name = file_name.replace('.txt','')
+
+
+            unique_characters,unique_letters = check_unique_chars(txt_file_path)
+            language = check_language(txt_file_path)
+            top_peek, mid_peek, bot_peek = get_peeks(txt_file_path)
+
+            report_data = []
+
+            report_data.append(clean_file_name)
+            report_data.append(str(unique_characters))
+            report_data.append(str(unique_letters))
+            report_data.append(language)
+            report_data.append(top_peek)
+            report_data.append(mid_peek)
+            report_data.append(bot_peek)
+
+            write_report('file_reports','clean_files_reports','Caracteristicas Docs',report_data)
+
+def generate_dirty_file_reports(txt_folder_path,pdf_folder_path):
 
     if not os.path.exists(txt_folder_path):
         print(f"El folder no existe: [{txt_folder_path}]")
@@ -287,4 +374,6 @@ def generate_file_reports(txt_folder_path,pdf_folder_path):
             
 folder_path = 'C:\\Users\\Oscar\\Desktop\\LIBROS\\downloaded_pdfs\\'
 txt_path = 'C:\\Users\\Oscar\\Desktop\\LIBROS\\txt_files\\'
-generate_file_reports(txt_path,folder_path)
+clean_txt_path = 'C:\\Users\\Oscar\\Desktop\\LIBROS\\txt_clean\\'
+#generate_dirty_file_reports(txt_path,folder_path)
+#generate_clean_file_reports(clean_txt_path)
